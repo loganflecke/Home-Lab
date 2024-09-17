@@ -32,7 +32,7 @@ Download-Expand -Link $sysmon_link -File "$DestinationPath\Sysmon.zip"
 Download-Expand -Link $sysconfig_link -File "$DestinationPath\sysconfig.xml.zip"
 
 # Full path to Sysmon64.exe
-$sysmonPath = "$DestinationPath\Sysmon\Sysmon64.exe"
+$sysmonPath = "$DestinationPath\Sysmon64.exe"
 
 # Check if ossec.conf exists and modify it
 if (Test-Path -Path $ossecConfPath) {
