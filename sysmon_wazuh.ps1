@@ -3,7 +3,7 @@
 # Run as Administrator
 # PowerShell to install Sysmon on a Windows Operating System and configure it to send logs to Wazuh
 
-$sysconfig_link = 'https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml'
+$sysconfig_link = 'https://raw.githubusercontent.com/olafhartong/sysmon-modular/master/sysmonconfig.xml'
 $sysmon_link = 'https://download.sysinternals.com/files/Sysmon.zip'
 
 $DestinationPath = 'C:\Users\Administrator\Downloads'
