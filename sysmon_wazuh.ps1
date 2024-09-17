@@ -9,8 +9,9 @@ $sysmon_link = 'https://download.sysinternals.com/files/Sysmon.zip'
 $DestinationPath = 'C:\Users\Administrator\Downloads'
 $ossecConfPath = 'C:\Program Files (x86)\ossec-agent\ossec.conf'
 
-# Define the XML block to append
+# Define the XML block to append, an empty line is included for readability
 $sysmonConfig = @"
+
 <localfile>
   <location>Microsoft-Windows-Sysmon/Operational</location>
   <log_format>eventchannel</log_format>
@@ -26,15 +27,14 @@ function Download-Expand {
     Expand-Archive -Path $File -DestinationPath $DestinationPath -Force
 }
 
-# Download and Expand Sysmon
+# Download and Expand Sysmon and Sysconfig
 Download-Expand -Link $sysmon_link -File "$DestinationPath\Sysmon.zip"
-
-# Download and Expand Sysconfig
 Download-Expand -Link $sysconfig_link -File "$DestinationPath\sysconfig.xml.zip"
 
 # Full path to Sysmon64.exe
 $sysmonPath = "$DestinationPath\Sysmon\Sysmon64.exe"
 
+# Check if ossec.conf exists and modify it
 if (Test-Path -Path $ossecConfPath) {
     $fileContent = Get-Content -Path $ossecConfPath
     $insertIndex = $fileContent.Length - 6
@@ -49,6 +49,12 @@ if (Test-Path -Path $ossecConfPath) {
 }
 
 # Install Sysmon with configuration
-& $sysmonPath -accepteula -i "$DestinationPath\sysconfig.xml"
+if (Test-Path -Path $sysmonPath) {
+    & $sysmonPath -accepteula -i "$DestinationPath\sysconfig.xml"
+    Write-Host "Sysmon installed successfully."
+} else {
+    Write-Host "Error: Sysmon64.exe not found in expected path."
+}
 
+# Restart the Wazuh service
 Restart-Service -Name "WazuhSvc"
