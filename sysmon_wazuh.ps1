@@ -3,7 +3,7 @@
 # Run as Administrator
 # PowerShell to install Sysmon on a Windows Operating System and configure it to send logs to Wazuh
 
-$sysconfig_link = 'https://wazuh.com/resources/sysconfig.xml.zip'
+$sysconfig_link = 'https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml'
 $sysmon_link = 'https://download.sysinternals.com/files/Sysmon.zip'
 
 $DestinationPath = 'C:\Users\Administrator\Downloads'
@@ -18,18 +18,11 @@ $sysmonConfig = @"
 </localfile>
 "@
 
-function Download-Expand {
-    param (
-        [string]$Link,
-        [string]$File
-    )
-    Invoke-WebRequest -Uri $Link -OutFile $File
-    Expand-Archive -Path $File -DestinationPath $DestinationPath -Force
-}
-
 # Download and Expand Sysmon and Sysconfig
-Download-Expand -Link $sysmon_link -File "$DestinationPath\Sysmon.zip"
-Download-Expand -Link $sysconfig_link -File "$DestinationPath\sysconfig.xml.zip"
+Invoke-WebRequest -Uri $sysmon_link -OutFile "$DestinationPath\Sysmon.zip"
+Expand-Archive -Path "$DestinationPath\Sysmon.zip" -DestinationPath $DestinationPath -Force
+
+Invoke-WebRequest -Uri $sysconfig_link -OutFile "$DestinationPath\sysconfig.xml"
 
 # Full path to Sysmon64.exe
 $sysmonPath = "$DestinationPath\Sysmon64.exe"
