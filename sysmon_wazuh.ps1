@@ -35,9 +35,6 @@ Download-Expand -Link $sysconfig_link -File "$DestinationPath\sysconfig.xml.zip"
 # Full path to Sysmon64.exe
 $sysmonPath = "$DestinationPath\Sysmon\Sysmon64.exe"
 
-# Install Sysmon with configuration
-& $sysmonPath -accepteula -i "$DestinationPath\sysconfig.xml"
-
 if (Test-Path -Path $ossecConfPath) {
     $fileContent = Get-Content -Path $ossecConfPath
     $insertIndex = $fileContent.Length - 6
@@ -50,5 +47,8 @@ if (Test-Path -Path $ossecConfPath) {
 } else {
     Write-Host "Error: ossec.conf file not found."
 }
+
+# Install Sysmon with configuration
+& $sysmonPath -accepteula -i "$DestinationPath\sysconfig.xml"
 
 Restart-Service -Name "WazuhSvc"
