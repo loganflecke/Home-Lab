@@ -1,45 +1,89 @@
-#!/bin/dash
+#!/bin/bash
 
-# Script to restart networking and trigger DHCP to give the server an IP address
-# Used when Proxmox WAN network adapter is configured with DHCP
-# Access to the router's DHCP leases is required
+# Log file to track the script's actions
+LOGFILE=/root/network_reboot.log
+date > $LOGFILE
 
-NETWORKRECONNECT=/root/network_reboot.log
-date > $NETWORKRECONNECT
-
-function run_fix () {
-	systemctl restart networking
-	echo "	Networking restarted" >> $NETWORKRECONNECT
-	sleep 10
-	dhclient -r vmbr0
-	sleep 20
-	dhclient vmbr0
-	echo "	vmbr0 acquired new IP address" >> $NETWORKRECONNECT
-	sleep 20
-	ifreload -a
-	echo "	Fix completed" >> $NETWORKRECONNECT
+# Function to test internet connectivity by pinging google.com twice
+function test_ping {
+    echo "Testing internet connectivity by pinging google.com twice..." >> $LOGFILE
+    ping -c 2 google.com > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "Ping successful! Internet connection is working." >> $LOGFILE
+        exit 0
+    else
+        echo "Ping failed. No internet connection." >> $LOGFILE
+    fi
 }
 
-function check_ping () {
-	echo "Testing connection..." >> $NETWORKRECONNECT
-	ping -c 1 google.com > /dev/null 2>$1
-	return $?
-}
+# Loop the whole process 5 times if necessary
+for attempt in {1..5}; do
+    echo "" >> $LOGFILE
+    date >> $LOGFILE
+    echo "Attempt $attempt to fix networking..." >> $LOGFILE
+    
+    # Restart networking service
+    echo "Restarting networking service..." >> $LOGFILE
+    systemctl restart networking
+    if [ $? -eq 0 ]; then
+        echo "Successfully restarted networking." >> $LOGFILE
+    else
+        echo "Failed to restart networking." >> $LOGFILE
+    fi
 
-i=0
-while [ $i -le 5 ] 
-do
-	$trial = $i+1
-	echo "Running fix $trial" >> $NETWORKRECONNECT
-	run_fix
+    # Sleep for 15 seconds after restarting networking
+    sleep 15
 
-	if check_ping; then
-		echo "Fix successful" >> $NETWORKRECONNECT
-		break
-	else
-		echo "Trying again..." >> $NETWORKRECONNECT
-	fi
+    # Ping to check if network is already up
+    test_ping
 
-	sleep 5
-	i = $((i+1))
+    # Reload network interfaces
+    echo "Reloading network interfaces..." >> $LOGFILE
+    ifreload -a
+    if [ $? -eq 0 ]; then
+        echo "Successfully reloaded network interfaces." >> $LOGFILE
+    else
+        echo "Failed to reload network interfaces." >> $LOGFILE
+    fi
+
+    # Sleep for 5 seconds after restarting networking
+    sleep 5
+
+    # Ping to check if reloading interfaces fixed the connection
+    test_ping
+
+    # Release the IP address for vmbr0
+    echo "Releasing old IP address for vmbr0..." >> $LOGFILE
+    dhclient -r vmbr0
+    if [ $? -eq 0 ]; then
+        echo "Successfully released old IP address for vmbr0." >> $LOGFILE
+    else
+        echo "Failed to release old IP address for vmbr0." >> $LOGFILE
+    fi
+
+    # Sleep for 5 seconds after restarting networking
+    sleep 5
+
+    # Ping to check if the release of the IP address affects connectivity
+    test_ping
+
+    # Acquire a new IP address for vmbr0
+    echo "Acquiring new IP address for vmbr0..." >> $LOGFILE
+    dhclient vmbr0
+    if [ $? -eq 0 ]; then
+        echo "Successfully acquired new IP address for vmbr0." >> $LOGFILE
+    else
+        echo "Failed to acquire new IP address for vmbr0." >> $LOGFILE
+    fi
+
+    # Sleep for 10 seconds after acquiring new IP
+    sleep 10
+
+    # Final ping test after acquiring the new IP
+    test_ping
+
+    echo "Attempt $attempt completed without successful ping. Retrying..." >> $LOGFILE
 done
+
+echo "All attempts completed but no successful ping. Please check network settings." >> $LOGFILE
+exit 1
