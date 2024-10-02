@@ -1,0 +1,15 @@
+server_config:
+  manager_ip: &manager_ip "192.168.1.10"  # Define an anchor
+
+nodes:
+  indexer:
+    - name: node-1
+      ip: *manager_ip  # Use the same host
+
+  server:
+    - name: wazuh-1
+      ip: *manager_ip  # Use the same host
+
+dashboard:
+  name: dashboard
+  ip: *manager_ip  # Use the same host
