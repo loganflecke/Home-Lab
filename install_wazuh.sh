@@ -6,7 +6,7 @@ host_ip="192.168.1.10"
 
 # Download installation and configuration files
 curl -sO https://packages.wazuh.com/4.9/wazuh-install.sh
-curl -sO https://github.com/loganflecke/Home-Lab/blob/main/wazuh_custom_config.yml
+curl -sO https://raw.githubusercontent.com/loganflecke/Home-Lab/refs/heads/main/wazuh_custom_config.yml
 
 bash wazuh-install.sh --generate-config-files
 
