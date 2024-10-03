@@ -7,4 +7,8 @@ echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://arti
 
 sudo apt-get update && sudo apt-get install elasticsearch
 
-curl -so /etc/elasticsearch/elasticsearch.yml https://packages.wazuh.com/resources/4.1/elastic-stack/elasticsearch/7.x/elasticsearch.yml
+curl -so /etc/elasticsearch/elasticsearch.yml https://packages.wazuh.com/resources/4.9/elastic-stack/elasticsearch/8.x/elasticsearch.yml
+
+sed -i "s/^deb/#deb/" /etc/apt/sources.list.d/elastic-8.x.list
+
+apt update
