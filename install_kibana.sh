@@ -3,7 +3,7 @@
 # Variables
 KIBANA_VERSION="8.9.2"
 KIBANA_DOWNLOAD_URL="https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-linux-x86_64.tar.gz"
-KIBANA_DIR="/usr/share/kibana"
+KIBANA_DIR="/usr/share/kibana-${KIBANA_VERSION}"
 KIBANA_SERVICE="/etc/systemd/system/kibana.service"
 
 # Update and install dependencies
@@ -17,7 +17,7 @@ wget $KIBANA_DOWNLOAD_URL -O kibana-${KIBANA_VERSION}.tar.gz
 # Extract Kibana
 echo "Extracting Kibana..."
 sudo tar -xzf kibana-${KIBANA_VERSION}.tar.gz -C /usr/share/
-sudo mv /usr/share/kibana-${KIBANA_VERSION}-linux-x86_64 $KIBANA_DIR
+sudo mv /usr/share/kibana-${KIBANA_VERSION} $KIBANA_DIR
 
 # Create kibana user and set permissions
 echo "Creating Kibana user..."
