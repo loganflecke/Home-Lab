@@ -17,7 +17,7 @@ wget $KIBANA_DOWNLOAD_URL -O kibana-${KIBANA_VERSION}.tar.gz
 # Extract Kibana
 echo "Extracting Kibana..."
 sudo tar -xzf kibana-${KIBANA_VERSION}.tar.gz -C /usr/share/
-sudo mv /usr/share/kibana-${KIBANA_VERSION} $KIBANA_DIR
+#sudo mv kibana-${KIBANA_VERSION}.tar.gz $KIBANA_DIR
 
 # Create kibana user and set permissions
 echo "Creating Kibana user..."
