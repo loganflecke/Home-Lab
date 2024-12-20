@@ -8,7 +8,7 @@ Goal is to give the recommendations and purpose behind each element of the home 
 
 **Documentation**
 - [Steps](Documentation/steps.md)
-- [Forensics](forensics.md)
+- [Forensics](Documentation/forensics.md)
 - [Hunting](Documentation/hunting.md)
 - [SIEM Engineering](Documentation/siem_engineering.md)
 - [Malware Analysis](Documentation/malware_analysis.md)
