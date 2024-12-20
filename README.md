@@ -6,13 +6,14 @@ Goal is to give the recommendations and purpose behind each element of the home 
 
 ## Table of Contents
 
-- [Steps](steps.md)
+**Documentation**
+- [Steps](Documentation/steps.md)
 - [Forensics](forensics.md)
-- [Hunting](hunting.md)
-- [SIEM Engineering](siem_engineering.md)
-- [Malware Analysis](malware_analysis.md)
-- [Network Security](network_security.md)
-- [Active Directory](active_directory.md)
+- [Hunting](Documentation/hunting.md)
+- [SIEM Engineering](Documentation/siem_engineering.md)
+- [Malware Analysis](Documentation/malware_analysis.md)
+- [Network Security](Documentation/network_security.md)
+- [Active Directory](Documentation/active_directory.md)
 
 ## Overview
 
