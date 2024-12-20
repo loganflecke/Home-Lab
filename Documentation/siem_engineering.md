@@ -2,17 +2,21 @@
 
 ## Log Sources
 
-Choosing just Endpoint and Identity
+Choosing to ingest Endpoint and Identity logs only
 
 ## Security Onion
+
+Standalone mode
+
+Dummy monitoring network adapter
 
 ### Steps
 
 **Download ISO and configure VM**:
 
-**Disable unnecessary services**:
+**Disable Network Detection**:
 
-Suricata, Zeek, IDSTools
+Zeek, PCAP
 
 **Elastic Agents**:
 
@@ -20,7 +24,7 @@ Installation
 
 Fix Time Zone
 
-### Analysis (Cood also go in Hunting)
+### Analysis (Could also go in Hunting)
 
 Fields in Kibana
 
