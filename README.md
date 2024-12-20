@@ -21,7 +21,7 @@ This project showcases a home lab setup aimed at cybersecurity detection and aut
 The lab environment includes:
 - List of stuff liek "troubleshooting", "research/learning outcomes", "forensics/hunting/etc", "replication of enterprise network"
 
-![Network Diagram](network_diagram.png)
+![Network Diagram]("home lab network.png")
 
 ## Contributing
 
