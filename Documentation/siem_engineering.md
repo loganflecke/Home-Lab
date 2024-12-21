@@ -10,11 +10,13 @@ Security Onion runs in standalone mode with a dummy monitoring adapter. This ada
 
 ### Setup
 
+The following are highlights of how i setup Security Onion, specific to my environment. 
+
 	•	Download ISO and configure VM: Straightforward install.
 	•	Network Configuration:
-	•	Mapped Security Onion to a static DHCP mapping in pfSense.
-	•	Copied the management adapter’s MAC address into pfSense to create the static mapping.
-	•	Set Security Onion’s management adapter to the static IP assigned in pfSense.
+		•	Mapped Security Onion to a static DHCP mapping in pfSense.
+		•	Copied the management adapter’s MAC address into pfSense to create the static mapping.
+		•	Set Security Onion’s management adapter to the static IP assigned in pfSense.
 	•	Disable Network Detection: No Zeek or PCAP.
 	•	Elastic Agents: Installed on endpoints.
 	•	Fixing Time Zone: The time zone had to be adjusted because agent logs were coming in over 3 hours ahead of Security Onion’s system time.
