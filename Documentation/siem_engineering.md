@@ -9,6 +9,7 @@ I’m focusing on Endpoint and Identity logs since most attacks now target these
 Security Onion runs in standalone mode with a dummy monitoring adapter. This adapter is required for the system to remain operational, even though I’m not using it to monitor network traffic.
 
 ### Setup
+
 	•	Download ISO and configure VM: Straightforward install.
 	•	Network Configuration:
 	•	Mapped Security Onion to a static DHCP mapping in pfSense.
