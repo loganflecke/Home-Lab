@@ -1,31 +1,27 @@
-# SIEM Engineering
+SIEM Engineering
 
-## Log Sources
+Log Sources
 
-Choosing to ingest Endpoint and Identity logs only
+I’m focusing on Endpoint and Identity logs. Most attacks now target these areas, and with security becoming more software-centric than network-centric, this keeps the setup relevant and focused.
 
-## Security Onion
+Security Onion
 
-Standalone mode
+Security Onion runs in standalone mode with a dummy monitoring adapter. This adapter is required for the system to remain operational, even though I’m not using it to monitor network traffic.
 
-Dummy monitoring network adapter
+Setup
+	•	Download ISO and configure VM: Straightforward install.
+	•	Network Configuration:
+	•	Mapped Security Onion to a static DHCP mapping in pfSense.
+	•	Copied the management adapter’s MAC address into pfSense to create the static mapping.
+	•	Set Security Onion’s management adapter to the static IP assigned in pfSense.
+	•	Disable Network Detection: No Zeek or PCAP.
+	•	Elastic Agents: Installed on endpoints.
+	•	Fixing Time Zone: The time zone had to be adjusted because agent logs were coming in over 3 hours ahead of Security Onion’s system time.
 
-### Steps
+Analysis
 
-**Download ISO and configure VM**:
-
-**Disable Network Detection**:
-
-Zeek, PCAP
-
-**Elastic Agents**:
-
-Installation
-
-Fix Time Zone
-
-### Analysis (Could also go in Hunting)
-
-Fields in Kibana
-
-Troubleshooting steps
+I use Kibana for log analysis. Main tasks include:
+	•	Searching for key fields.
+	•	Troubleshooting log ingestion issues. Key logs for debugging include:
+	•	Logstash logs: /opt/so/log/logstash/logstash.log
+	•	Elasticsearch logs: /opt/so/log/elasticsearch/securityonion.log
