@@ -12,31 +12,31 @@ Security Onion runs in standalone mode with a dummy monitoring adapter. This ada
 
 The following are highlights of how i setup Security Onion, specific to my environment. 
 
-•	Download ISO and configure VM: Straightforward install.
+* Download ISO and configure VM: Straightforward install.
 
-•	Network Configuration:
+* Network Configuration:
 
-	•	Mapped Security Onion to a static DHCP mapping in pfSense.
+- Mapped Security Onion to a static DHCP mapping in pfSense.
+
+- Copied the management adapter’s MAC address into pfSense to create the static mapping.
  
-	•	Copied the management adapter’s MAC address into pfSense to create the static mapping.
+- Set Security Onion’s management adapter to the static IP assigned in pfSense.
  
-	•	Set Security Onion’s management adapter to the static IP assigned in pfSense.
- 
-•	Disable Network Detection: No Zeek or PCAP.
+* Disable Network Detection: No Zeek or PCAP.
 
-•	Elastic Agents: Installed on endpoints.
+* Elastic Agents: Installed on endpoints.
 
-•	Fixing Time Zone: The time zone had to be adjusted because agent logs were coming in over 3 hours ahead of Security Onion’s system time.
+* Fixing Time Zone: The time zone had to be adjusted because agent logs were coming in over 3 hours ahead of Security Onion’s system time.
 
 ### Analysis
 
 I use Kibana for log analysis. Main tasks include:
 
-	•	Searching for relevant fields to aid in investigations.
+* Searching for relevant fields to aid in investigations.
+
+* Troubleshooting log ingestion issues. Key logs for debugging include:
  
-	•	Troubleshooting log ingestion issues. Key logs for debugging include:
+- Logstash logs: /opt/so/log/logstash/logstash.log
  
-		•	Logstash logs: /opt/so/log/logstash/logstash.log
- 
-		•	Elasticsearch logs: /opt/so/log/elasticsearch/securityonion.log
+- Elasticsearch logs: /opt/so/log/elasticsearch/securityonion.log
  
