@@ -31,7 +31,7 @@ This project showcases a home lab setup tailored to cybersecurity detection, hun
 
 Key technologies used include Proxmox, Windows OS, Security Onion, Velociraptor, Flare VM, Atomic Red Team, and BadBlood.  
 
-![Network Diagram](Documentation/images/home_lab_network.png)  
+![Network Diagram](Documentation/images/expanded_home_lab_network.png)  
 
 ## **Contributing**  
 
