@@ -21,6 +21,10 @@ These articles come from my [Medium.com blog](https://medium.com/@logan.flecke) 
 - [Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network](Publications/proxmox_install.md)
 - [Turning Windows 11 into a Malware Analysis Sandbox](Publications/flare_install.md)
 
+### **Scripts**
+
+- [Proxmox Network Reboot](Scripts/network_reboot.sh) is used whenever the server running Proxmox boots up to reinitialize the IP address assigned to it by the router.
+
 ## **Overview**  
 
 This project showcases a home lab setup tailored to cybersecurity detection, hunting, and automation. It serves as a foundation for exploring advanced tools and concepts in networking and security, incorporating:  
