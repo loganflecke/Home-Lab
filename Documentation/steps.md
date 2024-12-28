@@ -3,8 +3,6 @@
 ## **1. Operating System**  
 Prepare the underlying operating system for hosting the hypervisor.  
 
----
-
 ## **2. Hypervisor**  
 
 - **Type**:  
@@ -15,8 +13,6 @@ Prepare the underlying operating system for hosting the hypervisor.
 - **Networking**:  
   - Map virtual networks (vnets) to physical network interfaces.  
   - Disable firewalls on LAN-facing `vmbr` bridges to allow unrestricted internal traffic.  
-
----
 
 ## **3. Firewall**  
 
@@ -31,8 +27,6 @@ Prepare the underlying operating system for hosting the hypervisor.
 
 - **DHCP**:  
   - Assign static mappings to specific machines where needed.  
-
----
 
 ## **4. Active Directory**  
 
@@ -52,8 +46,6 @@ Prepare the underlying operating system for hosting the hypervisor.
 - **Future Plans**:  
   - Implement Kerberos configurations for secure authentication.  
 
----
-
 ## **5. Malware Analysis**  
 
 - **Clone or Install a Windows VM**:  
@@ -64,8 +56,6 @@ Prepare the underlying operating system for hosting the hypervisor.
 
 - **Perform Additional Setup**:  
   - Make environment-specific adjustments for analysis.  
-
----
 
 ## **6. Security Onion**  
 
@@ -79,8 +69,6 @@ Prepare the underlying operating system for hosting the hypervisor.
   - Install Elastic Agents for data collection and monitoring.  
   - Adjust time zone settings to ensure accurate logging.  
 
----
-
 ## **7. Velociraptor**  
 
 - **Install VM and Service**:  
@@ -89,14 +77,10 @@ Prepare the underlying operating system for hosting the hypervisor.
 - **Deploy Agents**:  
   - Install and configure Velociraptor agents on endpoints for data collection.  
 
----
-
 ## **8. Replicate Vulnerable Enterprise**  
 
 - **Install and Run BadBlood**:  
   - Use BadBlood to populate Active Directory with realistic but intentionally vulnerable configurations.  
-
----
 
 ## **9. Adversary Emulation**  
 
