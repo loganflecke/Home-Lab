@@ -16,11 +16,11 @@ The following are highlights of how i setup Security Onion, specific to my envir
 
 * Network Configuration:
 
- - Mapped Security Onion to a static DHCP mapping in pfSense.
+    - Mapped Security Onion to a static DHCP mapping in pfSense.
 
- - Copied the management adapter’s MAC address into pfSense to create the static mapping.
+    - Copied the management adapter’s MAC address into pfSense to create the static mapping.
  
- - Set Security Onion’s management adapter to the static IP assigned in pfSense.
+    - Set Security Onion’s management adapter to the static IP assigned in pfSense.
  
 * Disable Network Detection: No Zeek or PCAP.
 
@@ -36,7 +36,7 @@ I use Kibana for log analysis. Main tasks include:
 
 * Troubleshooting log ingestion issues. Key logs for debugging include:
  
- - Logstash logs: /opt/so/log/logstash/logstash.log
+    - Logstash logs: /opt/so/log/logstash/logstash.log
  
- - Elasticsearch logs: /opt/so/log/elasticsearch/securityonion.log
+    - Elasticsearch logs: /opt/so/log/elasticsearch/securityonion.log
  
