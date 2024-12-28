@@ -9,7 +9,6 @@ Goal is to give the recommendations and purpose behind each element of the home 
 **Documentation**
 - [Steps](Documentation/steps.md)
 - [Digital Forensics](Documentation/digital_forensics.md)
-- [Threat Hunting](Documentation/threat_hunting.md)
 - [SIEM Engineering](Documentation/siem_engineering.md)
 - [Malware Analysis](Documentation/malware_analysis.md)
 - [Network Security](Documentation/network_security.md)
