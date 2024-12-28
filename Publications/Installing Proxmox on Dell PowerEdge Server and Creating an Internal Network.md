@@ -1,94 +1,106 @@
-# Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network  
+**Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network**
 
-This guide will walk you through installing Proxmox on a Dell PowerEdge server and setting up an internal network for a home lab environment.  
+**Overview:**
+This guide walks through the steps of installing Proxmox on a Dell PowerEdge server and creating an internal network with a pfSense firewall connecting to internal hosts. This is useful for setting up a home lab or learning Proxmox for virtualization.
 
----
-
-## **Prerequisites**  
-
-Before starting, ensure you have:  
-1. A Dell PowerEdge server (e.g., R710, R720).  
-2. A bootable USB drive with the Proxmox ISO.  
-3. Access to the server's BIOS and boot menu.  
+**Components:**
+- **Server:** Dell PowerEdge R730 with 2 14-core CPUs, 32GB memory, and 1.8TB storage
+- **Operating System:** Proxmox VE 8.2 [Proxmox Download Link](https://www.proxmox.com/en/downloads/proxmox-virtual-environment/iso)
 
 ---
 
-## **Step 1: Preparing the Server**  
+### Installing Proxmox on the Server
 
-### **1.1 Updating Firmware**  
-- Download the latest firmware updates from Dell's support website.  
-- Create a bootable USB with the firmware update tool.  
-- Reboot the server and update firmware via the boot menu.  
-
-### **1.2 RAID Configuration**  
-- Access the RAID controller during startup (e.g., `Ctrl + R` for Dell servers).  
-- Configure your RAID array based on your storage needs (e.g., RAID 5 for redundancy).  
-- Initialize the RAID array before proceeding.  
-
----
-
-## **Step 2: Installing Proxmox VE**  
-
-### **2.1 Boot from USB**  
-1. Insert the Proxmox ISO bootable USB drive into the server.  
-2. Access the boot menu (e.g., `F11` or `F12` for Dell servers).  
-3. Select the USB drive as the boot device.  
-
-### **2.2 Installation Steps**  
-1. Select "Install Proxmox VE" from the menu.  
-2. Agree to the license agreement.  
-3. Select the target drive for installation (e.g., your RAID array).  
-4. Configure networking (e.g., set a static IP address).  
-5. Complete the installation and reboot the server.  
+**Preparing the USB:**
+1. Ensure the USB drive is properly formatted to FAT32 using tools like **Ventoy**, **Rufus**, or **Etcher**.
+   - **Ventoy** allows multiple ISOs on the same device and is recommended for the setup.
+   - Use the **GPT partitioning scheme** (recommended for UEFI compatibility).
+   
+2. **Formatting the USB:**
+   - On a Windows system, use `diskpart`:
+     - Open Command Prompt as Administrator.
+     - Run `diskpart`, `list disk`, `select disk <disk number>`, and `clean` to wipe the USB drive.
+   
+   - After the drive is wiped, use **Ventoy** to format it with FAT32 and GPT.
 
 ---
 
-## **Step 3: Initial Configuration**  
+### Installing the OS
 
-### **3.1 Access the Web Interface**  
-1. Open a browser and navigate to the server's IP address (e.g., `https://<server-ip>:8006`).  
-2. Log in with the root credentials created during installation.  
-
-### **3.2 Update Proxmox**  
-Run the following commands to update Proxmox:  
-```bash
-apt update && apt full-upgrade -y  
-pveupgrade  
-```  
-
----
-
-## **Step 4: Setting Up an Internal Network**  
-
-### **4.1 Creating Virtual Networks**  
-1. Navigate to `Datacenter > Nodes > <Server Name> > Network` in the Proxmox web interface.  
-2. Add a new Linux Bridge for each internal network (e.g., `vmbr1`, `vmbr2`).  
-3. Assign IP addresses to the bridges for management purposes.  
-
-### **4.2 Configuring VMs**  
-1. Create virtual machines in Proxmox.  
-2. Attach VMs to the appropriate bridge for network segmentation.  
-
-### **4.3 Disabling Firewall on LAN Bridges**  
-To avoid connectivity issues in the lab environment, disable the firewall for internal bridges.  
-1. Go to `Datacenter > Firewall > Options`.  
-2. Turn off the firewall for internal bridges like `vmbr1` and `vmbr2`.  
+1. **Booting the Server:**
+   - Insert the USB into the Dell PowerEdge R730, and press **F10** to enter the Lifecycle Controller.
+   - Go to **System Setup > System BIOS > Boot Settings** and enable **UEFI**, then disable **BIOS**.
+   
+2. **Set the Boot Sequence:**
+   - Set the USB drive at the end of the boot sequence.
+   - Enable DHCP to let the router provide the server with an IP address. If no IP is provided, reboot and retry.
+   
+3. **Proxmox Installation:**
+   - After setting DHCP, follow the prompts to install Proxmox on the server.
 
 ---
 
-## **Step 5: Adding Open vSwitch (Optional)**  
+### Creating an Internal Network (LAN)
 
-To enable advanced networking features like VLANs or port mirroring, install and configure Open vSwitch:  
-```bash
-apt install openvswitch-switch  
-```  
-- Replace Linux bridges with OVS bridges in `/etc/network/interfaces`.  
-- Configure VLANs or port mirroring as needed.  
+1. **Verify Network Connectivity:**
+   - After Proxmox installation, use `ip a` and `ping google.com` to verify that the server has an IP address and internet connection.
+
+2. **Setting Up Virtual Network Adapters:**
+   - To create a virtual network, modify `/etc/network/interfaces`:
+     - Set `eno1` (physical adapter) to **manual**.
+     - Set `vmbr0` (virtual adapter) to **static** with the IP address `10.0.0.79/24` and gateway `10.0.0.1`.
+     - Add `bridge-ports eno1` to link the virtual adapter to the physical one.
+
+   ```bash
+   # /etc/network/interfaces
+   auto lo
+   iface lo inet loopback
+   auto eno1
+   iface eno1 inet manual
+   auto vmbr0
+   iface vmbr0 inet static
+       address 10.0.0.79/24
+       gateway 10.0.0.1
+       bridge-ports eno1
+       bridge-stp off
+       bridge-fd 0
+   ```
+
+3. **Access Proxmox Web Interface:**
+   - Open a browser and go to `https://<server ip>:8006/` to access the Proxmox web interface.
+   - Log in with the root account and password set during installation.
+
+4. **Creating Virtual Machines (VMs):**
+   - Create a **Kali Linux** VM connected to `vmbr0` (WAN).
+   - Create an **Ubuntu desktop** VM and connect it to a new network adapter (LAN).
+   - Create a **pfSense firewall** VM to manage the WAN and LAN networks.
 
 ---
 
-## **Conclusion**  
+### pfSense Firewall Setup
 
-You’ve successfully installed Proxmox on a Dell PowerEdge server and set up an internal network. This configuration provides a foundation for a robust home lab, ideal for testing, forensics, and cybersecurity experiments.  
+1. **Creating the LAN Network:**
+   - In Proxmox, go to **Create > Linux Bridge** to create a new virtual network adapter for the internal network.
+   - Optionally enable **VLAN aware** if you plan to use VLANs to segment the network further.
+   
+2. **Configure pfSense:**
+   - Set up **vmbr0** for WAN and **vmbr1** for LAN in pfSense.
+   - This allows the internal VMs to connect to the internet via the firewall.
 
-For further details or troubleshooting, refer to Proxmox documentation or Dell support resources.  
+3. **Finalize Configuration:**
+   - After pfSense is installed, configure network adapters (`vmbr0` for WAN and `vmbr1` for LAN).
+   - Apply configuration in Proxmox to enable the new settings across all VMs without rebooting.
+
+---
+
+### Final Setup
+
+1. **Connect Internal Machines:**
+   - With the internal network set up, you can add more VMs, test attacks, set up detection mechanisms, or expand your lab as needed.
+
+2. **Summary:**
+   - You've successfully set up Proxmox on a Dell PowerEdge server and created an internal network with a pfSense firewall managing the connection between LAN and WAN.
+
+---
+
+**Connect with me:** [LinkedIn Profile](https://www.linkedin.com/in/loganflecke/)
