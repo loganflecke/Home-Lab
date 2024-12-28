@@ -12,7 +12,11 @@ The goal is to provide recommendations and explain the purpose behind each lab c
 - [SIEM Engineering](Documentation/siem_engineering.md)  
 - [Malware Analysis](Documentation/malware_analysis.md)  
 - [Network Security](Documentation/network_security.md)  
-- [Active Directory](Documentation/active_directory.md)  
+- [Active Directory](Documentation/active_directory.md)
+
+### **Publications**
+- [Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network](Publications/proxmox_install.md)
+- [Turning Windows 11 into a Malware Analysis Sandbox](Publications/flare_install.md)
 
 ## **Overview**  
 
