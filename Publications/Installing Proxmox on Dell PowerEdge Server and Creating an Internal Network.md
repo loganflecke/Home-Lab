@@ -1,15 +1,15 @@
-**Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network**
+# **Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network**
 
-**Overview:**
+## **Overview:**
 This guide walks through the steps of installing Proxmox on a Dell PowerEdge server and creating an internal network with a pfSense firewall connecting to internal hosts. This is useful for setting up a home lab or learning Proxmox for virtualization.
 
-**Components:**
+## **Components:**
 - **Server:** Dell PowerEdge R730 with 2 14-core CPUs, 32GB memory, and 1.8TB storage
 - **Operating System:** Proxmox VE 8.2 [Proxmox Download Link](https://www.proxmox.com/en/downloads/proxmox-virtual-environment/iso)
 
 ---
 
-### Installing Proxmox on the Server
+## Installing Proxmox on the Server
 
 **Preparing the USB:**
 1. Ensure the USB drive is properly formatted to FAT32 using tools like **Ventoy**, **Rufus**, or **Etcher**.
@@ -25,7 +25,7 @@ This guide walks through the steps of installing Proxmox on a Dell PowerEdge ser
 
 ---
 
-### Installing the OS
+## Installing the OS
 
 1. **Booting the Server:**
    - Insert the USB into the Dell PowerEdge R730, and press **F10** to enter the Lifecycle Controller.
@@ -40,7 +40,7 @@ This guide walks through the steps of installing Proxmox on a Dell PowerEdge ser
 
 ---
 
-### Creating an Internal Network (LAN)
+## Creating an Internal Network (LAN)
 
 1. **Verify Network Connectivity:**
    - After Proxmox installation, use `ip a` and `ping google.com` to verify that the server has an IP address and internet connection.
@@ -77,7 +77,7 @@ This guide walks through the steps of installing Proxmox on a Dell PowerEdge ser
 
 ---
 
-### pfSense Firewall Setup
+## pfSense Firewall Setup
 
 1. **Creating the LAN Network:**
    - In Proxmox, go to **Create > Linux Bridge** to create a new virtual network adapter for the internal network.
@@ -93,7 +93,7 @@ This guide walks through the steps of installing Proxmox on a Dell PowerEdge ser
 
 ---
 
-### Final Setup
+## Final Setup
 
 1. **Connect Internal Machines:**
    - With the internal network set up, you can add more VMs, test attacks, set up detection mechanisms, or expand your lab as needed.
