@@ -16,7 +16,7 @@ The goal is to provide recommendations and explain the purpose behind each lab c
 
 ### **Publications**
 
-These articles come from my [Medium.com blog](https://medium.com/@logan.flecke) of tutorials and insights into cybersecurity and cybersecurity home labs.
+These articles come from my [Medium.com blog](https://medium.com/@logan.flecke) of tutorials and insights into cybersecurity and cybersecurity home labs. The Markdown is copied from Medium to GitHub, omitting images, while the original publications can be found on Medium.
 
 - [Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network](Publications/proxmox_install.md)
 - [Turning Windows 11 into a Malware Analysis Sandbox](Publications/flare_install.md)
