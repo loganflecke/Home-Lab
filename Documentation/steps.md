@@ -1,109 +1,106 @@
-# Steps
+# **Steps to Set Up the Lab**  
 
-## 1. Operating System
+## **1. Operating System**  
+Prepare the underlying operating system for hosting the hypervisor.  
 
-## 2. Hypervisor
+---
 
-**Type**: 
+## **2. Hypervisor**  
 
-Something like 1, 2, 3 where this one runs on bare metal hardware
+- **Type**:  
+  1. Install and configure Proxmox on bare-metal hardware.  
+  2. Set up virtualization for multiple operating systems.  
+  3. Optimize performance for virtual machines (VMs).  
 
-**Networking**: 
+- **Networking**:  
+  - Map virtual networks (vnets) to physical network interfaces.  
+  - Disable firewalls on LAN-facing `vmbr` bridges to allow unrestricted internal traffic.  
 
-Mapping vnets to physical
+---
 
-Disabing firewall on LAN vmbr's
+## **3. Firewall**  
 
-## 3. Firewall
+- **VPN**:  
+  - Configure OpenVPN to allow secure remote access from the home network.  
+  - Enable clipboard functionality for interactions with VMs (e.g., malware analysis).  
+  - Consider risks associated with using clipboard functionality in malware analysis environments.  
+  - Understand OpenVPN's client/server model, subnet configurations, and overall setup.  
 
-**VPN**: 
+- **Rules**:  
+  - Determine and implement the necessary open ports to support services.  
 
-Allowing control from home network (outside proxmox GUI)
+- **DHCP**:  
+  - Assign static mappings to specific machines where needed.  
 
-Support copy paste
+---
 
-Risks with malware analysis VM
+## **4. Active Directory**  
 
-How OpenVPN works with client/server, subnets, and configurations
+- **Installing VMs**:  
+  - Locate and download required ISOs.  
+  - Install drivers and configure Proxmox VM settings.  
+  - Enable RDP for administrative access.  
 
-**Rules**:
+- **Installing Active Directory, DNS, DHCP**:  
+  - Deploy Active Directory services.  
+  - Enable auditing to capture security-related events.  
 
-What ports need to be open
+- **Joining Clients to Domain**:  
+  - Configure clients to join the domain.  
+  - Set the Domain Controller (DC) as the DNS server.  
 
-**DHCP**:
+- **Future Plans**:  
+  - Implement Kerberos configurations for secure authentication.  
 
-What machines are have a static mapping
+---
 
-## 4. Active Directory
+## **5. Malware Analysis**  
 
-**Installing VMs**:
+- **Clone or Install a Windows VM**:  
+  - Prepare isolated environments for malware analysis.  
 
-Finding ISOs
+- **Disable Defender**:  
+  - Disable Windows Defender to prevent interference during testing.  
 
-Drivers
+- **Perform Additional Setup**:  
+  - Make environment-specific adjustments for analysis.  
 
-Proxmox configs
+---
 
-Enable RDP
+## **6. Security Onion**  
 
-**Installing Active Directory, DNS, DHCP**:
+- **Download ISO and Configure VM**:  
+  - Install and set up Security Onion for monitoring and detection.  
 
-Enable Auditing
+- **Disable Unnecessary Services**:  
+  - Deactivate components like Suricata, Zeek, and IDSTools based on lab requirements.  
 
-**Joining clients to domain**:
+- **Elastic Agents**:  
+  - Install Elastic Agents for data collection and monitoring.  
+  - Adjust time zone settings to ensure accurate logging.  
 
-Joining computer
+---
 
-Setting DC and DNS server
+## **7. Velociraptor**  
 
-**Future**:
+- **Install VM and Service**:  
+  - Deploy Velociraptor on a dedicated VM and set it up as a service.  
 
-Configure Kerberos
+- **Deploy Agents**:  
+  - Install and configure Velociraptor agents on endpoints for data collection.  
 
-## 5. Malware Analysis
+---
 
-**Clone or Install a Windows VM**:
+## **8. Replicate Vulnerable Enterprise**  
 
-**Disable Defender**:
+- **Install and Run BadBlood**:  
+  - Use BadBlood to populate Active Directory with realistic but intentionally vulnerable configurations.  
 
-**Do something else**:
+---
 
-## 6. Security Onion
+## **9. Adversary Emulation**  
 
-**Download ISO and configure VM**:
-
-**Disable unnecessary services**:
-
-Suricata, Zeek, IDSTools
-
-**Elastic Agents**:
-
-Installation
-
-Fix Time Zone
-
-## 7. Install Velociraptor
-
-Install VM
-
-Install service
-
-**Deploy Agents**:
-
-## 8. Replicate Vulnerable Enterprise
-
-**Install and Run Badblood**:
-
-## 9. Adversary Emulation
-
-**Install and Run Atomic Red Team**:
-
-Exclude directory
-
-Installation on Domain Controller
-
-Specify Install Path
-
-Run Invoke-AtomicTest
-
-Use Adversary CSV files
+- **Install and Run Atomic Red Team**:  
+  - Exclude directories from security tools to avoid interference.  
+  - Install Atomic Red Team on the Domain Controller with a specified path.  
+  - Run `Invoke-AtomicTest` for individual tests or use CSV files to execute multi-step attack chains.  
