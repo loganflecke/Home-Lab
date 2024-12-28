@@ -25,8 +25,8 @@ Firewall rules in pfSense control traffic between subnets and to external destin
 
 OpenVPN is configured on pfSense to provide secure remote access to the lab environment. This allows for seamless management and interaction with lab systems from any location.
 
-- **Capabilities**:
+**Capabilities**:
     
-    - Encrypted VPN tunnels protect all data in transit.
-    - Remote access to internal systems via RDP or browser-based interfaces.
-    - Secure access to pfSense and other administrative systems on the DFIR subnet.
+- Encrypted VPN tunnels protect all data in transit.
+- Remote access to internal systems via RDP or browser-based interfaces.
+- Secure access to pfSense and other administrative systems on the DFIR subnet.
