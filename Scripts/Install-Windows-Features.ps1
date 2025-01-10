@@ -55,7 +55,7 @@ if(!$firstcheck) {
 
 # Install and Configure DHCP
 Write-Host "Starting DHCP Setup"
-Add-Content "Starting DHCP Setup"
+Add-Content $logfile "Starting DHCP Setup"
 Install-WindowsFeature -Name DHCP -IncludeManagementTools
 $server_dns_name = Get-DnsServerSetting
 $server_dns_name = $server_dns_name.ComputerName
