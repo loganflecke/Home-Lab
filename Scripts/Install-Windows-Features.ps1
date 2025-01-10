@@ -1,5 +1,6 @@
 # Powershell Script to install and configure Active Directory, DHCP, DNS, and NTP
 # Inspired by https://github.com/sysadmintutorials/windows-server-2022-powershell-ad-install-config/blob/main/Windows%20Server%202022%20-%20Active%20Directory%20Install.ps1 which was written for Windows Server 2022
+# If there is an error for a missing terminator, comment out line 73 "Set-ItemProperty ..." and perform it manually
 
 # Written by Logan Flecke
 
@@ -64,12 +65,12 @@ Add-Content $logfile "Starting DHCP Setup"
 Install-WindowsFeature -Name DHCP -IncludeManagementTools
 $server_dns_name = Get-DnsServerSetting
 $server_dns_name = $server_dns_name.ComputerName
-Add-DhcpServerv4Scope -Name "Logan Internal Network" -StartRange $dhcp_scope_start -EndRange $dhcp_scope_end -SubnetMask $subnet_mask
+Add-DhcpServerv4Scope -Name "Logan Internal Network" -StartRange $dhcp_scope_start -EndRange $dhcp_scope_end -SubnetMask $dhcp_scope_subnet_mask
 
 # Authorize DHCP Server in Active Directory
 Add-DhcpServerInDC -DnsName $server_dns_name -IPAddress $ip_address
 # Notify Server Manager that DHCP server is authorized in Active Directory
-Set-ItemProperty –Path registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12 –Name ConfigurationState –Value 2
+Set-ItemProperty –Path registry::"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12" –Name "ConfigurationState" –Value 2
 Write-Host "DHCP Installed and Configured"
 
 # Configure NTP
