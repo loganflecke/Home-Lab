@@ -1,4 +1,5 @@
 # Powershell Script to install and configure Active Directory, DHCP, DNS, and NTP
+# Inspired by https://github.com/sysadmintutorials/windows-server-2022-powershell-ad-install-config/blob/main/Windows%20Server%202022%20-%20Active%20Directory%20Install.ps1 which was written for Windows Server 2022
 
 # Written by Logan Flecke
 
@@ -6,9 +7,11 @@
 $interface_name = "Ethernet"
 $ip_address = "192.168.1.10"
 $default_gateway = "192.168.1.1"
+$dhcp_scope_start = "192.168.1.100"
+$dhcp_scope_end = "192.168.1.200"
+$dhcp_scope_subnet_mask = "255.255.255.0"
 $domain_name = "logan.local"
 $timezone = "Eastern Standard Time"
-$dsrm_password = Read-Host "Enter Directory Services Restore Password" -AsSecureString
 
 $logfile = "C:\Users\Administrator\AD-Setup-log.txt"
 
@@ -22,8 +25,11 @@ if (Test-Path $logfile){
 
 $firstcheck = Select-String -Path $logfile -Pattern "#### Networking, Active Directory, and DNS Install Complete ####"
 if(!$firstcheck) {
-    Add-Content $logfile "Starting setup of Networking, Active Directory, and DNS"
+    # Get Domain Admin password
+    $dsrm_password = Read-Host "Enter Directory Services Restore Password" -AsSecureString
+
     # Configure IP Addressing
+    Add-Content $logfile "Starting setup of Networking, Active Directory, and DNS"
     Add-Content $logfile "Setting static IP to $ip_address on interface $interface_name"
 
     $interface = Get-NetIPConfiguration -InterfaceAlias $interface_name
@@ -52,15 +58,18 @@ if(!$firstcheck) {
     Restart-Computer -ComputerName $env:computername -ErrorAction Stop
 }
 
-
 # Install and Configure DHCP
 Write-Host "Starting DHCP Setup"
 Add-Content $logfile "Starting DHCP Setup"
 Install-WindowsFeature -Name DHCP -IncludeManagementTools
 $server_dns_name = Get-DnsServerSetting
 $server_dns_name = $server_dns_name.ComputerName
-Add-DhcpServerInDC -DnsName $server_dns_name -IPAddress $ip_address
+Add-DhcpServerv4Scope -Name "Logan Internal Network" -StartRange $dhcp_scope_start -EndRange $dhcp_scope_end -SubnetMask $subnet_mask
 
+# Authorize DHCP Server in Active Directory
+Add-DhcpServerInDC -DnsName $server_dns_name -IPAddress $ip_address
+# Notify Server Manager that DHCP server is authorized in Active Directory
+Set-ItemProperty –Path registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12 –Name ConfigurationState –Value 2
 Write-Host "DHCP Installed and Configured"
 
 # Configure NTP
