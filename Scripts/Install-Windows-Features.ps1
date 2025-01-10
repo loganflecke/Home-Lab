@@ -44,7 +44,7 @@ if(!$firstcheck) {
     Add-Content $logfile "### Networking Configured ###"
 
     # Enable RDP
-    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
     Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
     Write-Host "RDP Enabled"
     Add-Content $logfile "RDP Enabled"
@@ -70,7 +70,7 @@ Add-DhcpServerv4Scope -Name "Logan Internal Network" -StartRange $dhcp_scope_sta
 # Authorize DHCP Server in Active Directory
 Add-DhcpServerInDC -DnsName $server_dns_name -IPAddress $ip_address
 # Notify Server Manager that DHCP server is authorized in Active Directory
-Set-ItemProperty –Path registry::"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12" –Name "ConfigurationState" –Value 2
+Set-ItemProperty –Path 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12' –Name 'ConfigurationState' –Value 2
 Write-Host "DHCP Installed and Configured"
 
 # Configure NTP
