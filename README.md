@@ -20,6 +20,7 @@ These articles come from my [Medium.com blog](https://medium.com/@logan.flecke) 
 
 - [Installing Proxmox on Dell PowerEdge Server and Creating an Internal Network](Publications/proxmox_install.md)
 - [Turning Windows 11 into a Malware Analysis Sandbox](Publications/flare_install.md)
+- [Threat Detection and Response Home Lab](Publications/home_lab.md)
 
 ### **Scripts**
 
