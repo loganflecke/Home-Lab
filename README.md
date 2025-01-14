@@ -24,6 +24,8 @@ These articles come from my [Medium.com blog](https://medium.com/@logan.flecke) 
 ### **Scripts**
 
 - [Proxmox Network Reboot](Scripts/network_reboot.sh) is used whenever the server running Proxmox boots up to reinitialize the IP address assigned to it by the router.
+- [Domain Controller Setup](Scripts/Install-Windows-Features.ps1) promotes a Windows Server 2025 to a Domain Controller by installing Active Directory, DNS, DHCP, and NTP services. RDP is enabled here to enhance availability and IP addressing is configured.
+- [Lab Emulation Toolset](Scripts/Install-Emulation-Components.ps1) installs the tools necessary to execute and analyze endpoint and Active Directory attacks by installing the Elastic Agent, BadBlood, and Atomic Red Team. The beginnings of a network share are set up to enable seamless distribution of Elastic Agents to other domain-joined computers.
 
 ## **Overview**  
 
