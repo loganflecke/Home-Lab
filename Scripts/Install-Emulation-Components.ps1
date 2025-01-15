@@ -5,7 +5,11 @@
 
 param(
     [switch]$PowerShell, # Install PowerShell 7
-    [switch]$Velociraptor # Install Velociraptor client (not supported)
+    [switch]$SmbShare, # Create SMB Share
+    [switch]$Velociraptor, # Install Velociraptor client (not supported)
+    [switch]$Elastic, # Install Elastic Agent
+    [switch]$AtomicRedTeam, # Install Atomic Red Team
+    [switch]$BadBlood # Install BadBlood
 )
 
 $serverName = hostname
@@ -62,29 +66,33 @@ if ($PowerShell -eq $true){
 }
 
 # Create Network Share
-if (Test-Path $sharePath) {
-    Write-Host "The SMB share '$shareName' exists."
-} else {
-    Write-Host "Creating SMB Share, $shareName."
-    New-Item $Network_Share_Path -Type Directory
-    New-SmbShare -Name $shareName -Path $Network_Share_Path -FullAccess $fullAccessUsers -ReadAccess $readAccessUsers
-    Get-SmbShare
+if ($SmbShare -eq $true){
+    if (Test-Path $sharePath) {
+        Write-Host "The SMB share '$shareName' exists."
+    } else {
+        Write-Host "Creating SMB Share, $shareName."
+        New-Item $Network_Share_Path -Type Directory
+        New-SmbShare -Name $shareName -Path $Network_Share_Path -FullAccess $fullAccessUsers -ReadAccess $readAccessUsers
+        Get-SmbShare
+    }
 }
 
 # Install Elastic Agent
-Write-Host "Installing Elastic at $installPath\Elastic"
-Make-Path -Name "Elastic"
+if ($Elastic -eq $true){
+    Write-Host "Installing Elastic at $installPath\Elastic"
+    Make-Path -Name "Elastic"
 
-$security_onion_username = "admin" # Username to SSH into the Security Onion console
-$security_onion_ip = "172.18.1.10" # IP address of Security Onion's management interface
-$elastic_directory = "$installPath\Elastic"
-$agent = "so-elastic-agent_windows_amd64" # Name of the executable
+    $security_onion_username = "admin" # Username to SSH into the Security Onion console
+    $security_onion_ip = "172.18.1.10" # IP address of Security Onion's management interface
+    $elastic_directory = "$installPath\Elastic"
+    $agent = "so-elastic-agent_windows_amd64" # Name of the executable
 
-scp -o StrictHostKeyChecking=no $security_onion_username@${security_onion_ip}:/opt/so/saltstack/local/salt/elasticfleet/files/so_agent-installers/$agent "$elastic_directory\$agent.exe"
-Write-Host "Copied Elastic Agent from Security Onion"
-Add-To-Share -FilePath "$elastic_directory\$agent.exe" # Add the agent to the network share
-Start-Process -FilePath "$elastic_directory\$agent.exe" # Launch the agent
-Write-Host "Elastic Agent Installed"
+    scp -o StrictHostKeyChecking=no $security_onion_username@${security_onion_ip}:/opt/so/saltstack/local/salt/elasticfleet/files/so_agent-installers/$agent "$elastic_directory\$agent.exe"
+    Write-Host "Copied Elastic Agent from Security Onion"
+    Add-To-Share -FilePath "$elastic_directory\$agent.exe" # Add the agent to the network share
+    Start-Process -FilePath "$elastic_directory\$agent.exe" # Launch the agent
+    Write-Host "Elastic Agent Installed"
+}
 
 if ($Velociraptor -eq $true){
     # Install Velociraptor Agent
@@ -109,33 +117,37 @@ if ($Velociraptor -eq $true){
 }
 
 # Install BadBlood
-Write-Host "Installing BadBlood at $installPath\BadBlood"
-Make-Path -Name "BadBlood"
+if ($BadBlood -eq $true){
+    Write-Host "Installing BadBlood at $installPath\BadBlood"
+    Make-Path -Name "BadBlood"
 
-Invoke-WebRequest "https://github.com/davidprowe/BadBlood/archive/refs/heads/master.zip" -OutFile "badblood_master.zip"
-Expand-Archive badblood_master.zip
-Move-Item .\badblood_master\BadBlood-master\* .
-Remove-Item .\badblood_master -Recurse
+    Invoke-WebRequest "https://github.com/davidprowe/BadBlood/archive/refs/heads/master.zip" -OutFile "badblood_master.zip"
+    Expand-Archive badblood_master.zip
+    Move-Item .\badblood_master\BadBlood-master\* .
+    Remove-Item .\badblood_master -Recurse
 
-$run_badblood = Read-Host "Run BadBlood Now? [Y/n]" # Prompt to run BadBlood (takes about 20-30 minutes)
-if (($run_badblood -eq "Y") -or ($run_badblood -eq "y")){
-    .\Invoke-BadBlood.ps1
+    $run_badblood = Read-Host "Run BadBlood Now? [Y/n]" # Prompt to run BadBlood (takes about 20-30 minutes)
+    if (($run_badblood -eq "Y") -or ($run_badblood -eq "y")){
+        .\Invoke-BadBlood.ps1
+    }
+    Write-Host "BadBlood Installed"
 }
-Write-Host "BadBlood Installed"
 
 # Install Atomic Red Team and exclude it in Defender
-Write-Host "Installing Atomic Red Team at $installPath\AtomicRedTeam"
-Make-Path -Name "AtomicRedTeam"
+if ($AtomicRedTeam -eq $true){
+    Write-Host "Installing Atomic Red Team at $installPath\AtomicRedTeam"
+    Make-Path -Name "AtomicRedTeam"
 
-Add-MpPreference -ExclusionPath "$installPath\AtomicRedTeam"
-Add-MpPreference -ExclusionPath "C:\AtomicRedTeam"
-Write-Host "Created Exclusion in Defender for $installPath\AtomicRedTeam and C:\AtomicRedTeam"
+    Add-MpPreference -ExclusionPath "$installPath\AtomicRedTeam"
+    Add-MpPreference -ExclusionPath "C:\AtomicRedTeam"
+    Write-Host "Created Exclusion in Defender for $installPath\AtomicRedTeam and C:\AtomicRedTeam"
 
-Set-MpPreference -DisableRealtimeMonitoring $true -DisableScriptScanning $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true
-IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing);
-IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
-Install-AtomicsFolder -Force
-Install-AtomicRedTeam -getAtomics -Force
-sleep 2
-Set-MpPreference -DisableRealtimeMonitoring $false -DisableScriptScanning $false -DisableBehaviorMonitoring $false -DisableIOAVProtection $false -DisableIntrusionPreventionSystem $false
-Write-Host "Atomic Red Team Installed"
+    Set-MpPreference -DisableRealtimeMonitoring $true -DisableScriptScanning $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true
+    IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing);
+    IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
+    Install-AtomicsFolder -Force
+    Install-AtomicRedTeam -getAtomics -Force
+    sleep 2
+    Set-MpPreference -DisableRealtimeMonitoring $false -DisableScriptScanning $false -DisableBehaviorMonitoring $false -DisableIOAVProtection $false -DisableIntrusionPreventionSystem $false
+    Write-Host "Atomic Red Team Installed"
+}
