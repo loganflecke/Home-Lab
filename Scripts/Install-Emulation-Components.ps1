@@ -20,6 +20,17 @@ $fullAccessUsers = "Administrators"
 $readAccessUsers = "Users"
 $installPath = "C:\Program Files\Lab"
 
+# Collect all arguments passed to the script except "-PowerShell"
+$allArguments = @(
+    if ($PowerShell) { '-PowerShell' }
+    if ($SmbShare) { '-SmbShare' }
+    if ($Velociraptor) { '-Velociraptor' }
+    if ($Elastic) { '-Elastic' }
+    if ($AtomicRedTeam) { '-AtomicRedTeam' }
+    if ($BadBlood) { '-BadBlood' }
+)
+$non_powershell_arguments = $allArguments | Where-Object { $_ -ne '-PowerShell' }
+
 if (-not (Test-Path -Path $installPath)){
     New-Item -Path $installPath -ItemType Directory
 }
@@ -44,7 +55,7 @@ function Add-To-Share {
         [string]$Executable, # Name of file to execute (don't include if not executing)
         [string[]]$Arguments # Parameters passed to executable when run
     )
-    if (Test-Path -Path $Filepath) {
+    if ((Test-Path -Path $Filepath) -and (Test-Path -Path $sharePath)) {
         Copy-Item $Filepath $sharePath
         Write-Host "$Filepath Copied to $sharePath"
         }
@@ -59,7 +70,8 @@ if ($PowerShell -eq $true){
     winget install Microsoft.PowerShell --accept-package-agreements
     
     # Launch script in PowerShell 7
-    & 'C:\Program Files\PowerShell\7\pwsh.exe' -File "C:\Users\Administrator\Downloads\Install-Emulation-Components.ps1"
+    $current_location = (Get-Location).Path
+    & 'C:\Program Files\PowerShell\7\pwsh.exe' -File "$current_location\Install-Emulation-Components.ps1" @non_powershell_arguments
     exit
 } else {
     Write-Host "PowerShell 7 installed. Proceeding with other installations."
@@ -147,6 +159,7 @@ if ($AtomicRedTeam -eq $true){
     IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
     Install-AtomicsFolder -Force
     Install-AtomicRedTeam -getAtomics -Force
+    Import-Module C:\AtomicRedTeam\invoke-atomicredteam\Invoke-AtomicRedTeam.psm1
     sleep 2
     Set-MpPreference -DisableRealtimeMonitoring $false -DisableScriptScanning $false -DisableBehaviorMonitoring $false -DisableIOAVProtection $false -DisableIntrusionPreventionSystem $false
     Write-Host "Atomic Red Team Installed"
