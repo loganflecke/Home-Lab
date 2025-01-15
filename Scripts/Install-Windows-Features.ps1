@@ -1,10 +1,10 @@
-# Powershell Script to install and configure Active Directory, DHCP, DNS, and NTP
+# Powershell Script to rename the Server and install Active Directory, DHCP, DNS, and NTP
 # Inspired by https://github.com/sysadmintutorials/windows-server-2022-powershell-ad-install-config/blob/main/Windows%20Server%202022%20-%20Active%20Directory%20Install.ps1 which was written for Windows Server 2022
-# If there is an error for a missing terminator, comment out line 73 "Set-ItemProperty ..." and perform it manually
 
 # Written by Logan Flecke
 
 # Set variable values
+$server_new_name = "DC01"
 $interface_name = "Ethernet"
 $ip_address = "192.168.1.10"
 $default_gateway = "192.168.1.1"
@@ -44,7 +44,7 @@ if(!$firstcheck) {
     Add-Content $logfile "### Networking Configured ###"
 
     # Enable RDP
-    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0
     Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
     Write-Host "RDP Enabled"
     Add-Content $logfile "RDP Enabled"
@@ -65,12 +65,12 @@ Add-Content $logfile "Starting DHCP Setup"
 Install-WindowsFeature -Name DHCP -IncludeManagementTools
 $server_dns_name = Get-DnsServerSetting
 $server_dns_name = $server_dns_name.ComputerName
-Add-DhcpServerv4Scope -Name "Logan Internal Network" -StartRange $dhcp_scope_start -EndRange $dhcp_scope_end -SubnetMask $dhcp_scope_subnet_mask
+Add-DhcpServerv4Scope -Name "Logan Internal Network" -StartRange $dhcp_scope_start -EndRange $dhcp_scope_end -SubnetMask $subnet_mask
 
 # Authorize DHCP Server in Active Directory
 Add-DhcpServerInDC -DnsName $server_dns_name -IPAddress $ip_address
 # Notify Server Manager that DHCP server is authorized in Active Directory
-Set-ItemProperty –Path 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ServerManager\Roles\12' –Name 'ConfigurationState' –Value 2
+Set-ItemProperty –Path 'HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\12' –Name "ConfigurationState" –Value 2
 Write-Host "DHCP Installed and Configured"
 
 # Configure NTP
@@ -78,3 +78,6 @@ Write-Host "Setting NTP Server with timezone to $timezone"
 Add-Content $logfile "Setting NTP Server with timezone to $timezone"
 tzutil /s $timezone
 w32tm /config /manualpeerlist:"time.windows.com" /syncfromflags:manual /reliable:yes /update
+
+# Rename the host and Restart
+Rename-Computer -NewName $server_new_name -Restart
