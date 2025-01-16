@@ -6,6 +6,7 @@
 param(
     [switch]$PowerShell, # Install PowerShell 7
     [switch]$SmbShare, # Create SMB Share
+    [switch]$Sysmon, # Install SysInternals' Sysmon
     [switch]$Velociraptor, # Install Velociraptor client (not supported)
     [switch]$Elastic, # Install Elastic Agent
     [switch]$AtomicRedTeam, # Install Atomic Red Team
@@ -87,6 +88,15 @@ if ($SmbShare -eq $true){
         New-SmbShare -Name $shareName -Path $Network_Share_Path -FullAccess $fullAccessUsers -ReadAccess $readAccessUsers
         Get-SmbShare
     }
+}
+
+# Install Sysmon
+if ($Sysmon -eq $true){
+    Make-Path -Name "Sysmon"
+    Invoke-WebRequest "https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/refs/heads/master/sysmonconfig-export.xml" -OutFile "$installPath\Sysmon\sysmonconfig-export.xml"
+    Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$installPath\Sysmon\Sysmon.zip"
+    Expand-Archive Sysmon.zip
+    .\Sysmon64.exe -accepteula -i $installPath\Sysmon\sysmonconfig-export.xml
 }
 
 # Install Elastic Agent
