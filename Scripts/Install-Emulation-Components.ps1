@@ -25,6 +25,7 @@ $installPath = "C:\Program Files\Lab"
 $allArguments = @(
     if ($PowerShell) { '-PowerShell' }
     if ($SmbShare) { '-SmbShare' }
+    if ($Sysmon) { '-Sysmon' }
     if ($Velociraptor) { '-Velociraptor' }
     if ($Elastic) { '-Elastic' }
     if ($AtomicRedTeam) { '-AtomicRedTeam' }
