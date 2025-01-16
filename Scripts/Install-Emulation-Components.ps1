@@ -97,6 +97,8 @@ if ($Sysmon -eq $true){
     Invoke-WebRequest "https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/refs/heads/master/sysmonconfig-export.xml" -OutFile "$installPath\Sysmon\sysmonconfig-export.xml"
     Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$installPath\Sysmon\Sysmon.zip"
     Expand-Archive Sysmon.zip
+    Move-Item .\Sysmon\* .
+    Remove-Item .\Sysmon -Recurse
     .\Sysmon64.exe -accepteula -i $installPath\Sysmon\sysmonconfig-export.xml
 }
 
