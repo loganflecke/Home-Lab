@@ -7,6 +7,7 @@ param(
     [switch]$PowerShell, # Install PowerShell 7
     [switch]$SmbShare, # Create SMB Share
     [switch]$Sysmon, # Install SysInternals' Sysmon
+    [switch]$WireShark, # Install WireShark (Windows x64)
     [switch]$Velociraptor, # Install Velociraptor client (not supported)
     [switch]$Elastic, # Install Elastic Agent
     [switch]$AtomicRedTeam, # Install Atomic Red Team
@@ -26,6 +27,7 @@ $allArguments = @(
     if ($PowerShell) { '-PowerShell' }
     if ($SmbShare) { '-SmbShare' }
     if ($Sysmon) { '-Sysmon' }
+    if ($WireShark) { '-WireShark' }
     if ($Velociraptor) { '-Velociraptor' }
     if ($Elastic) { '-Elastic' }
     if ($AtomicRedTeam) { '-AtomicRedTeam' }
@@ -100,6 +102,12 @@ if ($Sysmon -eq $true){
     Move-Item .\Sysmon\* .
     Remove-Item .\Sysmon -Recurse
     .\Sysmon64.exe -accepteula -i $installPath\Sysmon\sysmonconfig-export.xml
+}
+
+# Install WireShark
+if ($WireShark -eq $true){
+    Make-Path -Name "WireShark"
+    Invoke-WebRequest "https://2.na.dl.wireshark.org/win64/Wireshark-4.4.3-x64.exe" -OutFile "$installPath\WireShark\Wireshark-4.4.3-x64.exe"
 }
 
 # Install Elastic Agent
