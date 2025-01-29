@@ -11,11 +11,13 @@ Write-Host "RDP Enabled"
 
 # Configure IP Addressing
 $interface_name = (Get-NetAdapter).Name
-Write-Host "Setting DNS IP to $dns_server on interface $interface_name"
+Enable-NetAdapter -Name $interface_name
 
 $interface = Get-NetIPConfiguration -InterfaceAlias $interface_name
 $interface | Set-NetIPInterface -Dhcp Enabled
 Set-DnsClientServerAddress -InterfaceAlias $interface_name -ServerAddresses ($dns_server, "8.8.8.8")
+Write-Host "Set DNS IP to $dns_server on interface $ad_interface. Restarting $ad_interface..."
+Restart-NetAdapter -Name $ad_interface
 
 Write-Host "Networking Configured"
 
