@@ -96,7 +96,7 @@ if ($SmbShare -eq $true){
 # Install Sysmon
 if ($Sysmon -eq $true){
     Make-Path -Name "Sysmon"
-    Invoke-WebRequest "https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/refs/heads/master/sysmonconfig-export.xml" -OutFile "$installPath\Sysmon\sysmonconfig-export.xml"
+    Invoke-WebRequest "https://raw.githubusercontent.com/loganflecke/Sysmon/refs/heads/master/sysmonconfig-export.xml" -OutFile "$installPath\Sysmon\sysmonconfig-export.xml"
     Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$installPath\Sysmon\Sysmon.zip"
     Expand-Archive Sysmon.zip
     Move-Item .\Sysmon\* .
