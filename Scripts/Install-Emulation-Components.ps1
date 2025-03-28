@@ -101,7 +101,7 @@ if ($Sysmon -eq $true){
     Expand-Archive Sysmon.zip
     Move-Item .\Sysmon\* .
     Remove-Item .\Sysmon -Recurse
-    .\Sysmon64.exe -accepteula -i $installPath\Sysmon\sysmonconfig-export.xml
+    .\Sysmon64.exe -accepteula -i $installPath\Sysmon\sysmonconfig-research.xml
 }
 
 # Install WireShark
